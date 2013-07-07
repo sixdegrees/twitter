@@ -4,7 +4,7 @@ module Twitter
     module Account
       # Returns the requesting user if authentication was successful, otherwise raises {Twitter::Unauthorized}
       #
-      # @see https://dev.twitter.com/docs/api/1/get/account/verify_credentials
+      # @see https://dev.twitter.com/docs/api/1.1/get/account/verify_credentials
       # @rate_limited Yes
       # @requires_authentication Yes
       # @response_format `json`
@@ -16,7 +16,7 @@ module Twitter
       # @example Return the requesting user if authentication was successful
       #   Twitter.verify_credentials
       def verify_credentials(options={})
-        response = get('1/account/verify_credentials', options)
+        response = get('1.1/account/verify_credentials', options)
         format.to_s.downcase == 'xml' ? response['user'] : response
       end
 

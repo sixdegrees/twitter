@@ -96,7 +96,7 @@ module Twitter
         options = args.last.is_a?(Hash) ? args.pop : {}
         user = args.first || get_screen_name
         merge_user_into_options!(user, options)
-        response = get('1/statuses/user_timeline', options)
+        response = get('1.1/statuses/user_timeline', options)
         format.to_s.downcase == 'xml' ? response['statuses'] : response
       end
 

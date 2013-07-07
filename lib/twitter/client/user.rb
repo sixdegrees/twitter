@@ -4,7 +4,7 @@ module Twitter
     module User
       # Returns extended information of a given user
       #
-      # @see https://dev.twitter.com/docs/api/1/get/users/show
+      # @see https://dev.twitter.com/docs/api/1.1/get/users/show
       # @rate_limited Yes
       # @requires_authentication No
       # @response_format `json`
@@ -21,7 +21,7 @@ module Twitter
         options = args.last.is_a?(Hash) ? args.pop : {}
         user = args.first || get_screen_name
         merge_user_into_options!(user, options)
-        response = get('1/users/show', options)
+        response = get('1.1/users/show', options)
         format.to_s.downcase == 'xml' ? response['user'] : response
       end
 
@@ -36,7 +36,7 @@ module Twitter
       # @rate_limited Yes
       def user?(user, options={})
         merge_user_into_options!(user, options)
-        get('1/users/show', options, :format => :json, :raw => true)
+        get('1.1/users/show', options, :format => :json, :raw => true)
         true
       rescue Twitter::NotFound
         false
@@ -44,7 +44,7 @@ module Twitter
 
       # Returns extended information for up to 100 users
       #
-      # @see https://dev.twitter.com/docs/api/1/get/users/lookup
+      # @see https://dev.twitter.com/docs/api/1.1/get/users/lookup
       # @rate_limited Yes
       # @requires_authentication Yes
       # @response_format `json`
@@ -62,13 +62,13 @@ module Twitter
         options = args.last.is_a?(Hash) ? args.pop : {}
         users = args
         merge_users_into_options!(Array(users), options)
-        response = get('1/users/lookup', options)
+        response = get('1.1/users/lookup', options)
         format.to_s.downcase == 'xml' ? response['users'] : response
       end
 
       # Returns users that match the given query
       #
-      # @see https://dev.twitter.com/docs/api/1/get/users/search
+      # @see https://dev.twitter.com/docs/api/1.1/get/users/search
       # @rate_limited Yes
       # @requires_authentication Yes
       # @response_format `json`
@@ -82,14 +82,14 @@ module Twitter
       # @example Return users that match "Erik Michaels-Ober"
       #   Twitter.user_search("Erik Michaels-Ober")
       def user_search(query, options={})
-        response = get('1/users/search', options.merge(:q => query))
+        response = get('1.1/users/search', options.merge(:q => query))
         format.to_s.downcase == 'xml' ? response['users'] : response
       end
 
       # @overload suggestions(options={})
       #   Returns the list of suggested user categories
       #
-      #   @see https://dev.twitter.com/docs/api/1/get/users/suggestions
+      #   @see https://dev.twitter.com/docs/api/1.1/get/users/suggestions
       #   @rate_limited Yes
       #   @requires_authentication No
       #   @response_format `json`
@@ -101,7 +101,7 @@ module Twitter
       # @overload suggestions(slug, options={})
       #   Returns the users in a given category
       #
-      #   @see https://dev.twitter.com/docs/api/1/get/users/suggestions/:slug
+      #   @see https://dev.twitter.com/docs/api/1.1/get/users/suggestions/:slug
       #   @rate_limited Yes
       #   @requires_authentication No
       #   @response_format `json`
@@ -114,14 +114,14 @@ module Twitter
       def suggestions(*args)
         options = args.last.is_a?(Hash) ? args.pop : {}
         slug = args.first
-        response = get([1, 'users', 'suggestions', slug].compact.join('/'), options)
+        response = get([1.1, 'users', 'suggestions', slug].compact.join('/'), options)
         xml_key = slug ? 'category' : 'suggestions'
         format.to_s.downcase == 'xml' ? response[xml_key] : response
       end
 
       # Access the users in a given category of the Twitter suggested user list and return their most recent status if they are not a protected user
       #
-      # @see https://dev.twitter.com/docs/api/1/get/users/suggestions/:slug/members
+      # @see https://dev.twitter.com/docs/api/1.1/get/users/suggestions/:slug/members
       # @rate_limited Yes
       # @requires_authentication No
       # @response_format `json`
@@ -132,13 +132,13 @@ module Twitter
       # @example Return the users in the Art & Design category and their most recent status if they are not a protected user
       #   Twitter.suggest_users("art-design")
       def suggest_users(slug, options={})
-        response = get("1/users/suggestions/#{slug}/members", options)
+        response = get("1.1/users/suggestions/#{slug}/members", options)
         format.to_s.downcase == 'xml' ? response['suggestions'] : response
       end
 
       # Access the profile image in various sizes for the user with the indicated screen name
       #
-      # @see https://dev.twitter.com/docs/api/1/get/users/profile_image/:screen_name
+      # @see https://dev.twitter.com/docs/api/1.1/get/users/profile_image/:screen_name
       # @rate_limited No
       # @requires_authentication No
       # @response_format `json`
@@ -153,12 +153,12 @@ module Twitter
       def profile_image(*args)
         options = args.last.is_a?(Hash) ? args.pop : {}
         screen_name = args.first || get_screen_name
-        get("1/users/profile_image/#{screen_name}", options, :format => :json, :raw => true).headers['location']
+        get("1.1/users/profile_image/#{screen_name}", options, :format => :json, :raw => true).headers['location']
       end
 
       # Returns a user's friends
       #
-      # @see https://dev.twitter.com/docs/api/1/get/statuses/friends
+      # @see https://dev.twitter.com/docs/api/1.1/get/statuses/friends
       # @deprecated {Twitter::Client::User#friends} is deprecated as it will only return information about users who have Tweeted recently. It is not a functional way to retrieve all of a users followers. Instead of using this method use a combination of {Twitter::Client::FriendsAndFollowers#friend_ids} and {Twitter::Client::User#users}.
       # @rate_limited Yes
       # @requires_authentication No unless requesting it from a protected user
@@ -189,16 +189,16 @@ module Twitter
         user = args.first
         if user
           merge_user_into_options!(user, options)
-          response = get('1/statuses/friends', options)
+          response = get('1.1/statuses/friends', options)
         else
-          response = get('1/statuses/friends', options)
+          response = get('1.1/statuses/friends', options)
         end
         format.to_s.downcase == 'xml' ? response['users_list'] : response
       end
 
       # Returns a user's followers
       #
-      # @see https://dev.twitter.com/docs/api/1/get/statuses/followers
+      # @see https://dev.twitter.com/docs/api/1.1/get/statuses/followers
       # @deprecated {Twitter::Client::User#followers} is deprecated as it will only return information about users who have Tweeted recently. It is not a functional way to retrieve all of a users followers. Instead of using this method use a combination of {Twitter::Client::FriendsAndFollowers#follower_ids} and {Twitter::Client::User#users}.
       # @rate_limited Yes
       # @requires_authentication No unless requesting it from a protected user
@@ -229,9 +229,9 @@ module Twitter
         user = args.first
         if user
           merge_user_into_options!(user, options)
-          response = get('1/statuses/followers', options)
+          response = get('1.1/statuses/followers', options)
         else
-          response = get('1/statuses/followers', options)
+          response = get('1.1/statuses/followers', options)
         end
         format.to_s.downcase == 'xml' ? response['users_list'] : response
       end
@@ -251,13 +251,13 @@ module Twitter
       #   Twitter.recommendations
       def recommendations(options={})
         options[:excluded] = options[:excluded].join(',') if options[:excluded].is_a?(Array)
-        response = get('1/users/recommendations', options)
+        response = get('1.1/users/recommendations', options)
         format.to_s.downcase == 'xml' ? response['userrecommendations'] : response
       end
 
       # Returns an array of users that the specified user can contribute to
       #
-      # @see http://dev.twitter.com/docs/api/1/get/users/contributees
+      # @see http://dev.twitter.com/docs/api/1.1/get/users/contributees
       # @rate_limited Yes
       # @requires_authentication No unless requesting it from a protected user
       #
@@ -286,16 +286,16 @@ module Twitter
         user = args.pop || get_screen_name
         if user
           merge_user_into_options!(user, options)
-          response = get('1/users/contributees', options)
+          response = get('1.1/users/contributees', options)
         else
-          response = get('1/users/contributees', options)
+          response = get('1.1/users/contributees', options)
         end
         format.to_s.downcase == 'xml' ? response['users'] : response
       end
 
       # Returns an array of users who can contribute to the specified account
       #
-      # @see http://dev.twitter.com/docs/api/1/get/users/contributors
+      # @see http://dev.twitter.com/docs/api/1.1/get/users/contributors
       # @rate_limited Yes
       # @requires_authentication No unless requesting it from a protected user
       #
@@ -324,9 +324,9 @@ module Twitter
         user = args.pop || get_screen_name
         if user
           merge_user_into_options!(user, options)
-          response = get('1/users/contributors', options)
+          response = get('1.1/users/contributors', options)
         else
-          response = get('1/users/contributors', options)
+          response = get('1.1/users/contributors', options)
         end
         format.to_s.downcase == 'xml' ? response['users'] : response
       end

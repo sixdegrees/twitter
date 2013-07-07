@@ -10,7 +10,7 @@ describe Twitter::Client do
       describe ".verify_credentials" do
 
         before do
-          stub_get("1/account/verify_credentials.#{format}").
+          stub_get("1.1/account/verify_credentials.#{format}").
             to_return(:body => fixture("sferik.#{format}"), :headers => {:content_type => "application/#{format}; charset=utf-8"})
         end
 
@@ -30,7 +30,7 @@ describe Twitter::Client do
       describe ".rate_limit_status" do
 
         before do
-          stub_get("1/account/rate_limit_status.#{format}").
+          stub_get("1.1/account/rate_limit_status.#{format}").
             to_return(:body => fixture("rate_limit_status.#{format}"), :headers => {:content_type => "application/#{format}; charset=utf-8"})
         end
 
@@ -175,7 +175,7 @@ describe Twitter::Client do
       describe ".totals" do
 
         before do
-          stub_get("1/account/totals.#{format}").
+          stub_get("1.1/account/totals.#{format}").
             to_return(:body => fixture("totals.#{format}"), :headers => {:content_type => "application/#{format}; charset=utf-8"})
         end
 
@@ -190,7 +190,7 @@ describe Twitter::Client do
       describe ".settings" do
 
         before do
-          stub_get("1/account/settings.#{format}").
+          stub_get("1.1/account/settings.#{format}").
             to_return(:body => fixture("settings.#{format}"), :headers => {:content_type => "application/#{format}; charset=utf-8"})
           stub_post("1/account/settings.#{format}").
             with(:body => {:trend_location_woeid => "23424803"}).
